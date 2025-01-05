@@ -2,6 +2,8 @@
 
 - hosts: all
   gather_facts: false
+  collections:
+    - community.kubernetes
   tasks:
     - name: Get a list of all pods from any namespace
       k8s_info:
@@ -11,4 +13,5 @@
 
     - name: Print pod names
       debug:
-        msg: "pod_list: {{ pod_list | json_query('resources[*].metadata.name')  }} "
+        msg: "{{ item.metadata.name  }} "
+      with_items: "{{ pod_list.resources }}"
